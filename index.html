@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>innrscpe.</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta property="og:title" content="innerscape." />
+  <meta property="og:description" content="Mute the thoughts." />
+  <meta property="og:image" content="https://innerscape-official.github.io/innerscape/og.png" />
+  <meta property="og:url" content="https://innerscape-official.github.io/innerscape/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://innerscape-official.github.io/innerscape/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --dim: rgba(255,255,255,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Epilogue', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: var(--white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-content {
+      text-align: center;
+    }
+
+    @keyframes blurIn {
+      from { opacity: 0; filter: blur(12px); transform: translateY(6px); }
+      to   { opacity: 1; filter: blur(0px);  transform: translateY(0); }
+    }
+
+    .hero-title {
+      font-family: 'Roboto', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      opacity: 0;
+      animation: blurIn 1.25s ease 0.375s forwards;
+    }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: blurIn 1.25s ease 1.875s forwards;
+    }
+
+    /* Arrow */
+    .arrow {
+      position: absolute;
+      bottom: max(2.5rem, env(safe-area-inset-bottom) + 2rem);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0;
+      animation: arrowIn 1.25s ease 3.6s forwards, bob 2.5s ease-in-out 6s infinite;
+      cursor: none;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .arrow {
+        bottom: 2.5rem;
+      }
+    }
+
+    @keyframes arrowIn {
+      from { opacity: 0; filter: blur(8px); }
+      to   { opacity: 1; filter: blur(0px); }
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    .arrow svg {
+      width: 18px;
+      height: 18px;
+      stroke: rgba(255,255,255,0.65);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── LINKS SECTION ── */
+    #links {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem;
+      gap: 0;
+    }
+
+    .links-list {
+      list-style: none;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .links-list li {
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .links-list li:last-child {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .links-list a {
+      display: block;
+      padding: 1.6rem 0;
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+      font-weight: 300;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      transition: color 0.3s ease, letter-spacing 0.3s ease;
+    }
+
+    .links-list a:hover {
+      color: var(--white);
+      letter-spacing: 0.5em;
+    }
+
+    /* ── EMAIL SIGNUP ── */
+    #notify {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 5rem;
+      text-align: center;
+    }
+
+    .notify-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 1.6rem;
+      display: block;
+    }
+
+    .notify-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .notify-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      padding: 0.8rem 0;
+      outline: none;
+      text-align: center;
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+
+    .notify-input::placeholder {
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.3em;
+    }
+
+    .notify-input:focus {
+      border-color: var(--white);
+    }
+
+    .notify-btn {
+      margin-top: 0.8rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.65);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      cursor: none;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .notify-btn:hover {
+      border-color: var(--white);
+      color: var(--white);
+    }
+
+    /* ── MERCH ── */
+    #merch {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 5rem;
+      padding-top: 5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+
+    .tee-grid {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .tee-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .tee-img-wrap {
+      width: 160px;
+      height: 180px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .tee-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      mix-blend-mode: lighten;
+      transition: filter 0.4s ease;
+    }
+
+    .tee-img-wrap img:hover {
+      filter: grayscale(0%);
+    }
+
+    .tee-caption {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .merch-price {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+      letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.65);
+      margin: 1.6rem 0;
+      padding: 1.6rem 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      width: 100%;
+    }
+    .merch-label {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      display: block;
+      margin-bottom: 1.6rem;
+    }
+
+    .merch-link {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65) !important;
+      text-decoration: none !important;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding-bottom: 0.2rem;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .merch-link:visited {
+      color: rgba(255,255,255,0.65) !important;
+    }
+
+    .merch-link:hover {
+      color: var(--white) !important;
+      border-color: var(--white);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.15);
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      padding: 2rem;
+      cursor: none;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 45vw;
+      max-height: 85vh;
+      object-fit: contain;
+      filter: grayscale(100%);
+      animation: blurIn 0.4s ease forwards;
+    }
+
+    .lightbox-detail {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lightbox-detail-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.2rem;
+    }
+
+    .lightbox-specs {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .lightbox-specs li {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.65);
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .lightbox-specs li:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 600px) {
+      .lightbox {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .lightbox img {
+        max-width: 85vw;
+        max-height: 50vh;
+      }
+    }
+
+    .tee-img-wrap img {
+      cursor: none;
+    }
+    @media (max-width: 600px) {
+      .links-list a {
+        padding: 1.4rem 0;
+      }
+    }
+    /* ── TEE WRAPPER & DETAIL ── */
+    .tee-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .tee-detail {
+      position: absolute;
+      right: -180px;
+      top: 0;
+      width: 160px;
+      background: rgba(0,0,0,0.95);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1.2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .tee-detail.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .tee-detail-close {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.6rem;
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 1rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .tee-detail-label {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.8rem;
+    }
+
+    .tee-specs {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tee-specs li {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.65);
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .tee-specs li:last-child {
+      border-bottom: none;
+    }
+
+    /* ── SIZE ICON ── */
+    .size-icon-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin: 0.8rem 0;
+    }
+
+    .size-icon-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      padding: 0.4rem;
+      transition: color 0.3s ease;
+    }
+
+    .size-icon-btn:hover {
+      color: var(--white);
+    }
+
+    /* ── SIZE TABLE ── */
+    .size-table {
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .size-table.open {
+      max-height: 400px;
+    }
+
+    .size-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.65);
+      margin-top: 0.8rem;
+    }
+
+    .size-table th, .size-table td {
+      padding: 0.8rem 0.6rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .size-table th {
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.4);
+      font-weight: 300;
+    }
+
+    .size-table td:first-child {
+      text-align: left;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .size-note {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.25);
+      text-transform: uppercase;
+      margin-top: 0.8rem;
+      text-align: center;
+      padding-bottom: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .tee-detail {
+        position: static;
+        width: 100%;
+        margin-top: 1rem;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.3s ease, max-height 0.4s ease;
+      }
+      .tee-detail.active {
+        opacity: 1;
+        max-height: 300px;
+      }
+    }
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      filter: grayscale(100%);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">innerscape.</h1>
+      <p class="hero-sub">Mute the thoughts</p>
+    </div>
+    <a class="arrow" href="#links" aria-label="Scroll down">
+      <svg viewBox="0 0 24 24">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </a>
+  </section>
+
+  <!-- LINKS -->
+  <section id="links">
+    <ul class="links-list">
+      <li><a href="https://www.youtube.com/@innerscapeOfficial" target="_blank" rel="noopener">YouTube</a></li>
+      <li><a href="https://www.instagram.com/innrscpe/" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="https://www.facebook.com/profile.php?id=61568790236712&locale=cs_CZ" target="_blank" rel="noopener">Facebook</a></li>
+      <li><a href="https://soundcloud.com/innerscapeoffical" target="_blank" rel="noopener">SoundCloud</a></li>
+    </ul>
+
+    <!-- MERCH -->
+    <div id="merch">
+      <span class="merch-label">Be part of innerscape.</span>
+      
+      <div class="tee-wrapper">
+        <div class="tee-grid">
+          <div class="tee-item">
+            <div class="tee-img-wrap" data-view="front">
+              <img src="MTT_-_front.png" alt="innrscpe. tee — front" />
+            </div>
+            <span class="tee-caption">front</span>
+          </div>
+          <div class="tee-item">
+            <div class="tee-img-wrap" data-view="back">
+              <img src="MTT_-_back.png" alt="innrscpe. tee — back" />
+            </div>
+            <span class="tee-caption">back</span>
+          </div>
+          <div class="tee-item">
+            <div class="tee-img-wrap" data-view="side">
+              <img src="MTT_-_side.png" alt="innrscpe. tee — side" />
+            </div>
+            <span class="tee-caption">side</span>
+          </div>
+        </div>
+
+        <!-- Detail panel -->
+        <div class="tee-detail" id="teeDetail">
+          <button class="tee-detail-close" id="teeDetailClose">×</button>
+          <div class="tee-detail-content">
+            <span class="tee-detail-label">innrscpe. tee</span>
+            <ul class="tee-specs">
+              <li>200 g/m²</li>
+              <li>100% cotton</li>
+              <li>Silicone finish</li>
+              <li>High quality</li>
+              <li>Regular fit</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Size icon -->
+      <div class="size-icon-wrap">
+        <button class="size-icon-btn" onclick="this.closest('.size-icon-wrap').querySelector('.size-table').classList.toggle('open')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v1.5"/><path d="M3 12h18"/><path d="M3 16.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1.5"/>
+            <line x1="8" y1="6" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="18"/>
+          </svg>
+        </button>
+        <div class="size-table">
+          <table>
+            <thead>
+              <tr>
+                <th>size</th><th>XS</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>2XL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>A — length</td><td>68</td><td>70</td><td>72</td><td>74</td><td>76</td><td>78</td></tr>
+              <tr><td>C — chest</td><td>43</td><td>47</td><td>51</td><td>55</td><td>59</td><td>64</td></tr>
+              <tr><td>H — sleeve</td><td>18.5</td><td>19.5</td><td>20.5</td><td>21.5</td><td>22.5</td><td>23.5</td></tr>
+            </tbody>
+          </table>
+          <span class="size-note">all measurements in cm · tolerance ±5%</span>
+        </div>
+      </div>
+
+      <span class="merch-price">29 EUR</span>
+      <a class="merch-link" href="https://buy.stripe.com/3cIdR25mPch13g7fg7aEE01" target="_blank" rel="noopener">innrscpe. tee →</a>
+    </div>
+  </section>
+
+
+
+  <footer>
+    <a class="footer-link" href="/terms.html" target="_blank" rel="noopener">Terms & Conditions</a>
+    <span style="color:rgba(255,255,255,0.15);margin:0 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;">·</span>
+    <a class="footer-link" href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+  </footer>
+  <div class="lightbox" id="lightbox">
+    <img id="lightbox-img" src="" alt="" />
+    <div class="lightbox-detail">
+      <span class="lightbox-detail-label">innrscpe. tee</span>
+      <ul class="lightbox-specs">
+        <li>200 g/m²</li>
+        <li>100% cotton</li>
+        <li>Silicone finish</li>
+        <li>High quality</li>
+        <li>Regular fit</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+
+    // Lightbox + Detail panel
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    document.querySelectorAll('.tee-img-wrap').forEach(wrap => {
+      wrap.addEventListener('click', e => {
+        e.stopPropagation();
+        const img = wrap.querySelector('img');
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+      lightboxImg.src = '';
+    });
+  </script>
+
+</body>
+</html>
